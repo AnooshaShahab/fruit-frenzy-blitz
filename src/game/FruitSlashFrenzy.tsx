@@ -192,7 +192,7 @@ export default function FruitSlashFrenzy() {
       }
       if (f.bombType === "golden") {
         s.coins += 20; spawnParticles(f.x, f.y, "#ffd54f", 30); sfx.coin();
-        s.scorePops.push({ x: f.x, y: f.y, text: "+20💰", life: 60, color: "#ffd54f", size: 24 });
+        s.scorePops.push({ x: f.x, y: f.y, text: "+20", life: 60, color: "#ffd54f", size: 24 });
         return;
       }
     }
@@ -487,7 +487,7 @@ export default function FruitSlashFrenzy() {
       ctx.beginPath(); ctx.arc(0, 0, f.radius, 0, Math.PI * 2); ctx.fill();
       ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; ctx.stroke();
       ctx.fillStyle = "#fff"; ctx.font = "bold 20px system-ui"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-      ctx.fillText("★", 0, 2);
+      ctx.fillText("", 0, 2);
       ctx.restore(); return;
     }
     // fruit body
@@ -538,17 +538,17 @@ export default function FruitSlashFrenzy() {
     return (
       <div className={`fixed inset-0 ${bg} flex flex-col items-center justify-center text-white overflow-hidden`}>
         <FloatingFruits />
-        <div className="absolute top-4 left-4 z-10 bg-black/40 backdrop-blur px-4 py-2 rounded-full font-bold">🏆 Best: {hud.best}</div>
-        <div className="absolute top-4 right-4 z-10 bg-black/40 backdrop-blur px-4 py-2 rounded-full font-bold">💰 {hud.coins}</div>
+        <div className="absolute top-4 left-4 z-10 bg-black/40 backdrop-blur px-4 py-2 rounded-full font-bold"> Best: {hud.best}</div>
+        <div className="absolute top-4 right-4 z-10 bg-black/40 backdrop-blur px-4 py-2 rounded-full font-bold"> {hud.coins}</div>
         <h1 className="text-6xl md:text-8xl font-black text-center drop-shadow-[0_8px_0_rgba(0,0,0,0.5)] mb-2 z-10 animate-pulse">
           <span className="text-yellow-300">FRUIT</span> <span className="text-red-400">SLASH</span>
         </h1>
         <h2 className="text-4xl md:text-6xl font-black text-orange-300 drop-shadow-[0_6px_0_rgba(0,0,0,0.5)] mb-10 z-10">FRENZY</h2>
         <div className="flex flex-col gap-4 z-10">
-          <button className={`${btn} bg-gradient-to-b from-green-400 to-green-600 text-white`} onClick={() => { sfx.click(); setScreen("modes"); }}>▶  PLAY</button>
-          <button className={`${btn} bg-gradient-to-b from-blue-400 to-blue-600 text-white`} onClick={() => { sfx.click(); setScreen("leaderboard"); }}>🏆 LEADERBOARD</button>
-          <button className={`${btn} bg-gradient-to-b from-purple-400 to-purple-600 text-white`} onClick={() => { sfx.click(); setScreen("settings"); }}>⚙️ SETTINGS</button>
-          <button className={`${btn} bg-gradient-to-b from-red-400 to-red-600 text-white`} onClick={() => { sfx.click(); if (confirm("Exit game?")) window.close(); }}>✖ EXIT</button>
+          <button className={`${btn} bg-gradient-to-b from-green-400 to-green-600 text-white`} onClick={() => { sfx.click(); setScreen("modes"); }}>▶ PLAY</button>
+          <button className={`${btn} bg-gradient-to-b from-blue-400 to-blue-600 text-white`} onClick={() => { sfx.click(); setScreen("leaderboard"); }}> LEADERBOARD</button>
+          <button className={`${btn} bg-gradient-to-b from-purple-400 to-purple-600 text-white`} onClick={() => { sfx.click(); setScreen("settings"); }}> SETTINGS</button>
+          <button className={`${btn} bg-gradient-to-b from-red-400 to-red-600 text-white`} onClick={() => { sfx.click(); if (confirm("Exit game?")) window.close(); }}> EXIT</button>
         </div>
         <div className="absolute bottom-4 text-xs text-white/70 z-10">by anusha shahab</div>
       </div>
@@ -557,9 +557,9 @@ export default function FruitSlashFrenzy() {
 
   if (screen === "modes") {
     const cards = [
-      { m: "classic" as Mode, title: "CLASSIC", desc: "Endless slicing. Dodge bombs. 3 lives.", color: "from-red-500 to-orange-500", icon: "🍉" },
-      { m: "arcade" as Mode, title: "ARCADE", desc: "90 seconds. Score as high as you can.", color: "from-yellow-500 to-orange-600", icon: "⏱️" },
-      { m: "zen" as Mode, title: "ZEN", desc: "No bombs. Pure relaxation.", color: "from-teal-400 to-cyan-500", icon: "🧘" },
+      { m: "classic" as Mode, title: "CLASSIC", desc: "Endless slicing. Dodge bombs. 3 lives.", color: "from-red-500 to-orange-500", icon: "" },
+      { m: "arcade" as Mode, title: "ARCADE", desc: "90 seconds. Score as high as you can.", color: "from-yellow-500 to-orange-600", icon: "⏱" },
+      { m: "zen" as Mode, title: "ZEN", desc: "No bombs. Pure relaxation.", color: "from-teal-400 to-cyan-500", icon: "" },
     ];
     return (
       <div className={`fixed inset-0 ${bg} flex flex-col items-center justify-center text-white p-6 overflow-auto`}>
@@ -584,7 +584,7 @@ export default function FruitSlashFrenzy() {
     try { board = JSON.parse(localStorage.getItem("fsf_board") || "[]"); } catch { /* ignore */ }
     return (
       <div className={`fixed inset-0 ${bg} flex flex-col items-center text-white p-6 overflow-auto`}>
-        <h1 className="text-5xl font-black mb-6 mt-8 drop-shadow-[0_6px_0_rgba(0,0,0,0.5)]">🏆 LEADERBOARD</h1>
+        <h1 className="text-5xl font-black mb-6 mt-8 drop-shadow-[0_6px_0_rgba(0,0,0,0.5)]"> LEADERBOARD</h1>
         <div className="w-full max-w-2xl bg-black/40 backdrop-blur rounded-3xl p-6">
           {board.length === 0 && <p className="text-center text-white/70 py-8">No scores yet. Go play!</p>}
           {board.map((r, i) => (
@@ -593,7 +593,7 @@ export default function FruitSlashFrenzy() {
                 <span className={`text-2xl font-black w-10 ${i === 0 ? "text-yellow-300" : i === 1 ? "text-gray-300" : i === 2 ? "text-orange-400" : "text-white/60"}`}>#{i + 1}</span>
                 <div>
                   <div className="font-black text-xl">{r.score}</div>
-                  <div className="text-xs text-white/60">{r.date} • Combo x{r.combo} • 💰{r.coins}</div>
+                  <div className="text-xs text-white/60">{r.date} • Combo x{r.combo} • {r.coins}</div>
                 </div>
               </div>
             </div>
@@ -607,12 +607,12 @@ export default function FruitSlashFrenzy() {
   if (screen === "settings") {
     return (
       <div className={`fixed inset-0 ${bg} flex flex-col items-center justify-center text-white p-6`}>
-        <h1 className="text-5xl font-black mb-8 drop-shadow-[0_6px_0_rgba(0,0,0,0.5)]">⚙️ SETTINGS</h1>
+        <h1 className="text-5xl font-black mb-8 drop-shadow-[0_6px_0_rgba(0,0,0,0.5)]"> SETTINGS</h1>
         <div className="w-full max-w-md bg-black/40 backdrop-blur rounded-3xl p-6 space-y-4">
-          <Toggle label="🎵 Music" on={settings.music} onChange={v => setSettings(s => ({ ...s, music: v }))} />
-          <Toggle label="🔊 Sound" on={settings.sound} onChange={v => setSettings(s => ({ ...s, sound: v }))} />
+          <Toggle label=" Music" on={settings.music} onChange={v => setSettings(s => ({ ...s, music: v }))} />
+          <Toggle label=" Sound" on={settings.sound} onChange={v => setSettings(s => ({ ...s, sound: v }))} />
           <div>
-            <div className="font-bold mb-2">🎨 Graphics</div>
+            <div className="font-bold mb-2"> Graphics</div>
             <div className="flex gap-2">
               {(["high", "medium", "low"] as const).map(q => (
                 <button key={q} onClick={() => setSettings(s => ({ ...s, quality: q }))}
@@ -620,8 +620,8 @@ export default function FruitSlashFrenzy() {
               ))}
             </div>
           </div>
-          <button onClick={() => document.documentElement.requestFullscreen?.()} className="w-full py-3 bg-white/10 rounded-xl font-bold">🖥️ Fullscreen</button>
-          <button onClick={() => { if (confirm("Reset high score?")) { localStorage.removeItem("fsf_best"); localStorage.removeItem("fsf_board"); setHud(h => ({ ...h, best: 0 })); } }} className="w-full py-3 bg-red-500/40 rounded-xl font-bold">🗑️ Reset High Score</button>
+          <button onClick={() => document.documentElement.requestFullscreen?.()} className="w-full py-3 bg-white/10 rounded-xl font-bold"> Fullscreen</button>
+          <button onClick={() => { if (confirm("Reset high score?")) { localStorage.removeItem("fsf_best"); localStorage.removeItem("fsf_board"); setHud(h => ({ ...h, best: 0 })); } }} className="w-full py-3 bg-red-500/40 rounded-xl font-bold"> Reset High Score</button>
         </div>
         <button onClick={() => { sfx.click(); setScreen("menu"); }} className={`mt-8 ${btn} bg-white/20 backdrop-blur`}>← BACK</button>
       </div>
@@ -635,18 +635,18 @@ export default function FruitSlashFrenzy() {
         <div className="bg-black/40 backdrop-blur rounded-3xl p-8 mt-6 space-y-3 min-w-[300px] text-center">
           <div><div className="text-white/60 text-sm">Final Score</div><div className="text-4xl font-black text-yellow-300">{gameOverStats.score}</div></div>
           <div><div className="text-white/60 text-sm">Highest Combo</div><div className="text-2xl font-bold">x{gameOverStats.combo}</div></div>
-          <div><div className="text-white/60 text-sm">Coins Collected</div><div className="text-2xl font-bold">💰 {gameOverStats.coins}</div></div>
-          <div><div className="text-white/60 text-sm">High Score</div><div className="text-2xl font-bold">🏆 {hud.best}</div></div>
+          <div><div className="text-white/60 text-sm">Coins Collected</div><div className="text-2xl font-bold"> {gameOverStats.coins}</div></div>
+          <div><div className="text-white/60 text-sm">High Score</div><div className="text-2xl font-bold"> {hud.best}</div></div>
         </div>
         <div className="flex flex-wrap gap-3 mt-8 justify-center">
           <button className={`${btn} bg-gradient-to-b from-green-400 to-green-600`} onClick={() => startGame(mode)}>▶ PLAY AGAIN</button>
-          <button className={`${btn} bg-gradient-to-b from-blue-400 to-blue-600`} onClick={() => { sfx.click(); setScreen("menu"); }}>🏠 HOME</button>
-          <button className={`${btn} bg-gradient-to-b from-purple-400 to-purple-600`} onClick={() => { sfx.click(); setScreen("leaderboard"); }}>🏆 SCORES</button>
+          <button className={`${btn} bg-gradient-to-b from-blue-400 to-blue-600`} onClick={() => { sfx.click(); setScreen("menu"); }}> HOME</button>
+          <button className={`${btn} bg-gradient-to-b from-purple-400 to-purple-600`} onClick={() => { sfx.click(); setScreen("leaderboard"); }}> SCORES</button>
           <button className={`${btn} bg-gradient-to-b from-pink-400 to-pink-600`} onClick={async () => {
-            const text = `I scored ${gameOverStats.score} in Fruit Slash Frenzy! 🍉⚔️`;
+            const text = `I scored ${gameOverStats.score} in Fruit Slash Frenzy! `;
             if (navigator.share) { try { await navigator.share({ text }); } catch { /* ignore */ } }
             else { navigator.clipboard?.writeText(text); alert("Score copied to clipboard!"); }
-          }}>📤 SHARE</button>
+          }}> SHARE</button>
         </div>
       </div>
     );
@@ -668,14 +668,14 @@ export default function FruitSlashFrenzy() {
             <div className="bg-yellow-400 text-black px-4 py-1 rounded-full text-lg animate-pulse">COMBO x{hud.combo}</div>
           )}
           {mode === "arcade" && (
-            <div className="bg-black/50 backdrop-blur px-4 py-2 rounded-xl text-2xl">⏱️ {hud.time}s</div>
+            <div className="bg-black/50 backdrop-blur px-4 py-2 rounded-xl text-2xl">⏱ {hud.time}s</div>
           )}
-          <div className="bg-black/50 backdrop-blur px-3 py-1 rounded-full text-sm">💰 {hud.coins}</div>
+          <div className="bg-black/50 backdrop-blur px-3 py-1 rounded-full text-sm"> {hud.coins}</div>
         </div>
         <div className="flex flex-col items-end gap-2">
           <div className="bg-black/50 backdrop-blur px-4 py-2 rounded-xl flex gap-1">
             {Array.from({ length: 3 }).map((_, i) => (
-              <span key={i} className={i < hud.lives ? "text-red-400" : "text-white/20"}>❤️</span>
+              <span key={i} className={i < hud.lives ? "text-red-400" : "text-white/20"}></span>
             ))}
           </div>
           <button className="bg-black/50 backdrop-blur w-10 h-10 rounded-full pointer-events-auto text-xl"
@@ -684,10 +684,10 @@ export default function FruitSlashFrenzy() {
       </div>
       {/* buffs */}
       <div className="absolute bottom-3 left-3 flex gap-2 text-white text-xs font-bold">
-        {s.shield && <div className="bg-cyan-500/80 px-3 py-1 rounded-full">🛡️ SHIELD</div>}
+        {s.shield && <div className="bg-cyan-500/80 px-3 py-1 rounded-full"> SHIELD</div>}
         {performance.now() < s.doubleUntil && <div className="bg-yellow-500/80 px-3 py-1 rounded-full">2x SCORE</div>}
-        {performance.now() < s.rainbowUntil && <div className="bg-pink-500/80 px-3 py-1 rounded-full">🌈 RAINBOW</div>}
-        {performance.now() < s.freezeUntil && <div className="bg-blue-500/80 px-3 py-1 rounded-full">❄️ FROZEN</div>}
+        {performance.now() < s.rainbowUntil && <div className="bg-pink-500/80 px-3 py-1 rounded-full"> RAINBOW</div>}
+        {performance.now() < s.freezeUntil && <div className="bg-blue-500/80 px-3 py-1 rounded-full"> FROZEN</div>}
       </div>
 
       {screen === "paused" && (
@@ -695,8 +695,8 @@ export default function FruitSlashFrenzy() {
           <h2 className="text-5xl font-black mb-8">PAUSED</h2>
           <div className="flex flex-col gap-3">
             <button className={`${btn} bg-green-500`} onClick={() => { s.running = true; s.lastFrame = performance.now(); setScreen("game"); }}>▶ RESUME</button>
-            <button className={`${btn} bg-blue-500`} onClick={() => startGame(mode)}>🔄 RESTART</button>
-            <button className={`${btn} bg-red-500`} onClick={() => { sfx.click(); setScreen("menu"); }}>🏠 QUIT</button>
+            <button className={`${btn} bg-blue-500`} onClick={() => startGame(mode)}> RESTART</button>
+            <button className={`${btn} bg-red-500`} onClick={() => { sfx.click(); setScreen("menu"); }}> QUIT</button>
           </div>
         </div>
       )}
@@ -716,7 +716,7 @@ function Toggle({ label, on, onChange }: { label: string; on: boolean; onChange:
 }
 
 function FloatingFruits() {
-  const items = ["🍉", "🍊", "🍎", "🍌", "🍍", "🥝", "🍇", "🍋", "🍒", "🥭"];
+  const items = ["", "", "", "", "", "", "", "", "", ""];
   return (
     <>
       {items.map((f, i) => (
