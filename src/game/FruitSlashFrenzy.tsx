@@ -563,7 +563,7 @@ export default function FruitSlashFrenzy() {
           <button className={`${btn} bg-gradient-to-b from-[#C4B5FD] to-[#7C3AED] text-white`} onClick={() => { sfx.click(); setScreen("settings"); }}>SETTINGS</button>
           <button className={`${btn} bg-gradient-to-b from-[#FF8A8A] to-[#B81E1E] text-white`} onClick={() => { sfx.click(); if (confirm("Exit game?")) window.close(); }}>EXIT</button>
         </div>
-        <div className="absolute bottom-4 text-xs text-white/70 z-10 tracking-widest uppercase">by anusha shahab</div>
+        <div className="absolute bottom-4 text-sm text-white/80 z-10 tracking-wide font-medium">Designed & Developed by Anusha Shahab</div>
       </div>
     );
   }
