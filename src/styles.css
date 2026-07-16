@@ -20,6 +20,9 @@
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
+  --font-logo: "Luckiest Guy", "Fredoka", system-ui, sans-serif;
+  --font-ui: "Fredoka", "Baloo 2", system-ui, sans-serif;
+  --font-combo: "Bungee", "Luckiest Guy", system-ui, sans-serif;
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
