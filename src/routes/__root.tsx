@@ -85,13 +85,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Fruit Frenzy Blitz" },
+      { name: "twitter:description", content: "Slice juicy fruits, dodge bombs, and chain mega combos in a vibrant tropical arcade blitz." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4f2e46d0-8855-4f28-a7fd-96fdc6fe5c18/id-preview-47c6c70f--341af7dc-8920-4021-aec9-26730869248c.lovable.app-1784196914508.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4f2e46d0-8855-4f28-a7fd-96fdc6fe5c18/id-preview-47c6c70f--341af7dc-8920-4021-aec9-26730869248c.lovable.app-1784196914508.png" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
