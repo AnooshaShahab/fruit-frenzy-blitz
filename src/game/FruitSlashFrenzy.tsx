@@ -361,10 +361,14 @@ export default function FruitSlashFrenzy() {
       const shakeX = s.shake > 0 ? (Math.random() - 0.5) * s.shake : 0;
       const shakeY = s.shake > 0 ? (Math.random() - 0.5) * s.shake : 0;
 
-      // background gradient
-      const g = ctx.createLinearGradient(0, 0, 0, s.h);
-      g.addColorStop(0, "#2a1055"); g.addColorStop(0.5, "#7b2a8a"); g.addColorStop(1, "#ff6b35");
-      ctx.fillStyle = g; ctx.fillRect(0, 0, s.w, s.h);
+      // background: dark charcoal with tropical radial glow
+      ctx.fillStyle = "#111111";
+      ctx.fillRect(0, 0, s.w, s.h);
+      const rg = ctx.createRadialGradient(s.w / 2, s.h * 0.35, 40, s.w / 2, s.h * 0.35, Math.max(s.w, s.h));
+      rg.addColorStop(0, "rgba(255,138,0,0.35)");
+      rg.addColorStop(0.35, "rgba(56,189,248,0.15)");
+      rg.addColorStop(1, "rgba(17,17,17,0)");
+      ctx.fillStyle = rg; ctx.fillRect(0, 0, s.w, s.h);
 
       // subtle vignette
       ctx.save(); ctx.translate(shakeX, shakeY);
@@ -405,15 +409,17 @@ export default function FruitSlashFrenzy() {
 
       // combo pop
       if (s.comboPop) {
-        const scale = 1 + Math.sin((60 - s.comboPop.life) / 10) * 0.1;
+        const scale = 1 + Math.sin((60 - s.comboPop.life) / 10) * 0.12;
         ctx.save();
         ctx.translate(s.w / 2, s.h / 3);
         ctx.scale(scale, scale);
-        ctx.font = "bold 48px system-ui";
+        ctx.font = '52px "Bungee", "Luckiest Guy", system-ui';
         ctx.textAlign = "center";
-        ctx.strokeStyle = "#000"; ctx.lineWidth = 6;
+        ctx.strokeStyle = "#111111"; ctx.lineWidth = 8;
         ctx.strokeText(s.comboPop.text, 0, 0);
-        ctx.fillStyle = "#ffeb3b"; ctx.fillText(s.comboPop.text, 0, 0);
+        const cg = ctx.createLinearGradient(0, -30, 0, 30);
+        cg.addColorStop(0, "#FFD93D"); cg.addColorStop(1, "#FF8A00");
+        ctx.fillStyle = cg; ctx.fillText(s.comboPop.text, 0, 0);
         ctx.restore();
       }
 
@@ -515,66 +521,72 @@ export default function FruitSlashFrenzy() {
   };
 
   // ---------- Screens ----------
-  const bg = "bg-gradient-to-br from-[#2a1055] via-[#7b2a8a] to-[#ff6b35]";
-  const btn = "px-8 py-4 rounded-2xl font-black text-xl tracking-wide shadow-[0_8px_0_rgba(0,0,0,0.3)] active:translate-y-1 active:shadow-[0_4px_0_rgba(0,0,0,0.3)] transition-all";
+  const bg = "bg-[#111111] bg-[radial-gradient(ellipse_at_top,rgba(255,138,0,0.25),transparent_60%),radial-gradient(ellipse_at_bottom,rgba(56,189,248,0.18),transparent_55%)]";
+  const ui = "font-[family-name:var(--font-ui)]";
+  const btn = "px-8 py-4 rounded-2xl font-bold text-xl tracking-wide border-2 border-[#FFD93D]/80 shadow-[0_8px_0_rgba(0,0,0,0.45),inset_0_2px_0_rgba(255,255,255,0.35)] hover:-translate-y-0.5 hover:shadow-[0_10px_0_rgba(0,0,0,0.45),inset_0_2px_0_rgba(255,255,255,0.4)] active:translate-y-1 active:shadow-[0_3px_0_rgba(0,0,0,0.45),inset_0_2px_0_rgba(255,255,255,0.25)] transition-all";
+
+  const Logo = ({ size = "big" }: { size?: "big" | "small" }) => {
+    const cls = size === "big" ? "text-6xl md:text-8xl" : "text-4xl md:text-5xl";
+    const stroke = "[-webkit-text-stroke:2px_white] drop-shadow-[0_6px_0_rgba(60,20,10,0.85)]";
+    return (
+      <h1 className={`${cls} font-[family-name:var(--font-logo)] text-center leading-none z-10 tracking-wide`}>
+        <span className={`bg-gradient-to-b from-[#7CF08C] to-[#1F9E3B] bg-clip-text text-transparent ${stroke}`}>Fruit</span>{" "}
+        <span className={`bg-gradient-to-b from-[#FFE066] to-[#FF8A00] bg-clip-text text-transparent ${stroke}`}>Frenzy</span>{" "}
+        <span className={`bg-gradient-to-b from-[#FF7A7A] to-[#B81E1E] bg-clip-text text-transparent ${stroke}`}>Blitz</span>
+      </h1>
+    );
+  };
 
   if (screen === "loading") {
     return (
-      <div className={`fixed inset-0 ${bg} flex flex-col items-center justify-center text-white overflow-hidden`}>
+      <div className={`fixed inset-0 ${bg} ${ui} flex flex-col items-center justify-center text-white overflow-hidden`}>
         <FloatingFruits />
-        <h1 className="text-6xl md:text-7xl font-black text-center drop-shadow-[0_6px_0_rgba(0,0,0,0.5)] mb-2 z-10">
-          <span className="text-yellow-300">FRUIT</span> <span className="text-red-400">SLASH</span>
-        </h1>
-        <h2 className="text-4xl md:text-5xl font-black text-orange-300 drop-shadow-[0_4px_0_rgba(0,0,0,0.5)] mb-10 z-10">FRENZY</h2>
-        <div className="w-72 h-6 bg-black/40 rounded-full overflow-hidden border-2 border-white/30 z-10">
-          <div className="h-full bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 transition-all" style={{ width: `${loadPct}%` }} />
+        <Logo size="small" />
+        <div className="mt-10 w-72 h-6 bg-black/50 rounded-full overflow-hidden border-2 border-[#FFD93D]/70 z-10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]">
+          <div className="h-full bg-gradient-to-r from-[#39D353] via-[#FFD93D] to-[#FF4D4D] transition-all" style={{ width: `${loadPct}%` }} />
         </div>
-        <div className="mt-3 font-bold z-10">{loadPct}%</div>
+        <div className="mt-3 font-bold z-10 text-[#FFD93D]">{loadPct}%</div>
       </div>
     );
   }
 
   if (screen === "menu") {
     return (
-      <div className={`fixed inset-0 ${bg} flex flex-col items-center justify-center text-white overflow-hidden`}>
+      <div className={`fixed inset-0 ${bg} ${ui} flex flex-col items-center justify-center text-white overflow-hidden`}>
         <FloatingFruits />
-        <div className="absolute top-4 left-4 z-10 bg-black/40 backdrop-blur px-4 py-2 rounded-full font-bold"> Best: {hud.best}</div>
-        <div className="absolute top-4 right-4 z-10 bg-black/40 backdrop-blur px-4 py-2 rounded-full font-bold"> {hud.coins}</div>
-        <h1 className="text-6xl md:text-8xl font-black text-center drop-shadow-[0_8px_0_rgba(0,0,0,0.5)] mb-2 z-10 animate-pulse">
-          <span className="text-yellow-300">FRUIT</span> <span className="text-red-400">SLASH</span>
-        </h1>
-        <h2 className="text-4xl md:text-6xl font-black text-orange-300 drop-shadow-[0_6px_0_rgba(0,0,0,0.5)] mb-10 z-10">FRENZY</h2>
-        <div className="flex flex-col gap-4 z-10">
-          <button className={`${btn} bg-gradient-to-b from-green-400 to-green-600 text-white`} onClick={() => { sfx.click(); setScreen("modes"); }}>▶ PLAY</button>
-          <button className={`${btn} bg-gradient-to-b from-blue-400 to-blue-600 text-white`} onClick={() => { sfx.click(); setScreen("leaderboard"); }}> LEADERBOARD</button>
-          <button className={`${btn} bg-gradient-to-b from-purple-400 to-purple-600 text-white`} onClick={() => { sfx.click(); setScreen("settings"); }}> SETTINGS</button>
-          <button className={`${btn} bg-gradient-to-b from-red-400 to-red-600 text-white`} onClick={() => { sfx.click(); if (confirm("Exit game?")) window.close(); }}> EXIT</button>
+        <div className="absolute top-4 left-4 z-10 bg-black/50 backdrop-blur px-4 py-2 rounded-full font-bold border border-[#FFD93D]/40">Best: {hud.best}</div>
+        <div className="absolute top-4 right-4 z-10 bg-black/50 backdrop-blur px-4 py-2 rounded-full font-bold border border-[#FFD93D]/40 text-[#FFD93D]">Coins: {hud.coins}</div>
+        <Logo size="big" />
+        <div className="mt-10 flex flex-col gap-4 z-10">
+          <button className={`${btn} bg-gradient-to-b from-[#7CF08C] to-[#1F9E3B] text-white`} onClick={() => { sfx.click(); setScreen("modes"); }}>PLAY</button>
+          <button className={`${btn} bg-gradient-to-b from-[#7DD3FC] to-[#0284C7] text-white`} onClick={() => { sfx.click(); setScreen("leaderboard"); }}>LEADERBOARD</button>
+          <button className={`${btn} bg-gradient-to-b from-[#C4B5FD] to-[#7C3AED] text-white`} onClick={() => { sfx.click(); setScreen("settings"); }}>SETTINGS</button>
+          <button className={`${btn} bg-gradient-to-b from-[#FF8A8A] to-[#B81E1E] text-white`} onClick={() => { sfx.click(); if (confirm("Exit game?")) window.close(); }}>EXIT</button>
         </div>
-        <div className="absolute bottom-4 text-xs text-white/70 z-10">by anusha shahab</div>
+        <div className="absolute bottom-4 text-xs text-white/70 z-10 tracking-widest uppercase">by anusha shahab</div>
       </div>
     );
   }
 
   if (screen === "modes") {
     const cards = [
-      { m: "classic" as Mode, title: "CLASSIC", desc: "Endless slicing. Dodge bombs. 3 lives.", color: "from-red-500 to-orange-500", icon: "" },
-      { m: "arcade" as Mode, title: "ARCADE", desc: "90 seconds. Score as high as you can.", color: "from-yellow-500 to-orange-600", icon: "⏱" },
-      { m: "zen" as Mode, title: "ZEN", desc: "No bombs. Pure relaxation.", color: "from-teal-400 to-cyan-500", icon: "" },
+      { m: "classic" as Mode, title: "CLASSIC", desc: "Endless slicing. Dodge bombs. 3 lives.", color: "from-[#FF4D4D] to-[#FF8A00]" },
+      { m: "arcade" as Mode, title: "ARCADE", desc: "90 seconds. Score as high as you can.", color: "from-[#FFD93D] to-[#FF8A00]" },
+      { m: "zen" as Mode, title: "ZEN", desc: "No bombs. Pure relaxation.", color: "from-[#39D353] to-[#38BDF8]" },
     ];
     return (
-      <div className={`fixed inset-0 ${bg} flex flex-col items-center justify-center text-white p-6 overflow-auto`}>
-        <h1 className="text-5xl font-black mb-8 drop-shadow-[0_6px_0_rgba(0,0,0,0.5)]">CHOOSE MODE</h1>
+      <div className={`fixed inset-0 ${bg} ${ui} flex flex-col items-center justify-center text-white p-6 overflow-auto`}>
+        <h1 className="text-5xl font-[family-name:var(--font-logo)] mb-8 tracking-wide text-[#FFD93D] drop-shadow-[0_5px_0_rgba(0,0,0,0.6)]">CHOOSE MODE</h1>
         <div className="grid md:grid-cols-3 gap-6 max-w-5xl w-full">
           {cards.map(c => (
             <button key={c.m} onClick={() => startGame(c.m)}
-              className={`bg-gradient-to-br ${c.color} rounded-3xl p-8 shadow-[0_10px_0_rgba(0,0,0,0.3)] hover:scale-105 active:translate-y-1 transition-all text-left`}>
-              <div className="text-6xl mb-4">{c.icon}</div>
-              <h3 className="text-3xl font-black mb-2">{c.title}</h3>
+              className={`bg-gradient-to-br ${c.color} rounded-3xl p-8 border-2 border-[#FFD93D]/70 shadow-[0_10px_0_rgba(0,0,0,0.45),inset_0_2px_0_rgba(255,255,255,0.35)] hover:scale-105 hover:-translate-y-1 active:translate-y-1 transition-all text-left`}>
+              <h3 className="text-3xl font-[family-name:var(--font-logo)] tracking-wide mb-2">{c.title}</h3>
               <p className="text-white/90 font-medium">{c.desc}</p>
             </button>
           ))}
         </div>
-        <button onClick={() => { sfx.click(); setScreen("menu"); }} className={`mt-8 ${btn} bg-white/20 backdrop-blur`}>← BACK</button>
+        <button onClick={() => { sfx.click(); setScreen("menu"); }} className={`mt-8 ${btn} bg-white/15 backdrop-blur`}>BACK</button>
       </div>
     );
   }
@@ -583,70 +595,70 @@ export default function FruitSlashFrenzy() {
     let board: Score[] = [];
     try { board = JSON.parse(localStorage.getItem("fsf_board") || "[]"); } catch { /* ignore */ }
     return (
-      <div className={`fixed inset-0 ${bg} flex flex-col items-center text-white p-6 overflow-auto`}>
-        <h1 className="text-5xl font-black mb-6 mt-8 drop-shadow-[0_6px_0_rgba(0,0,0,0.5)]"> LEADERBOARD</h1>
-        <div className="w-full max-w-2xl bg-black/40 backdrop-blur rounded-3xl p-6">
+      <div className={`fixed inset-0 ${bg} ${ui} flex flex-col items-center text-white p-6 overflow-auto`}>
+        <h1 className="text-5xl font-[family-name:var(--font-logo)] mb-6 mt-8 text-[#FFD93D] tracking-wide drop-shadow-[0_5px_0_rgba(0,0,0,0.6)]">LEADERBOARD</h1>
+        <div className="w-full max-w-2xl bg-black/50 backdrop-blur rounded-3xl p-6 border-2 border-[#FFD93D]/40">
           {board.length === 0 && <p className="text-center text-white/70 py-8">No scores yet. Go play!</p>}
           {board.map((r, i) => (
             <div key={i} className="flex items-center justify-between py-3 border-b border-white/10 last:border-0">
               <div className="flex items-center gap-3">
-                <span className={`text-2xl font-black w-10 ${i === 0 ? "text-yellow-300" : i === 1 ? "text-gray-300" : i === 2 ? "text-orange-400" : "text-white/60"}`}>#{i + 1}</span>
+                <span className={`text-2xl font-[family-name:var(--font-logo)] w-10 ${i === 0 ? "text-[#FFD93D]" : i === 1 ? "text-gray-300" : i === 2 ? "text-[#FF8A00]" : "text-white/60"}`}>#{i + 1}</span>
                 <div>
-                  <div className="font-black text-xl">{r.score}</div>
-                  <div className="text-xs text-white/60">{r.date} • Combo x{r.combo} • {r.coins}</div>
+                  <div className="font-bold text-xl">{r.score}</div>
+                  <div className="text-xs text-white/60">{r.date} • Combo x{r.combo} • {r.coins} coins</div>
                 </div>
               </div>
             </div>
           ))}
         </div>
-        <button onClick={() => { sfx.click(); setScreen("menu"); }} className={`mt-8 ${btn} bg-white/20 backdrop-blur`}>← BACK</button>
+        <button onClick={() => { sfx.click(); setScreen("menu"); }} className={`mt-8 ${btn} bg-white/15 backdrop-blur`}>BACK</button>
       </div>
     );
   }
 
   if (screen === "settings") {
     return (
-      <div className={`fixed inset-0 ${bg} flex flex-col items-center justify-center text-white p-6`}>
-        <h1 className="text-5xl font-black mb-8 drop-shadow-[0_6px_0_rgba(0,0,0,0.5)]"> SETTINGS</h1>
-        <div className="w-full max-w-md bg-black/40 backdrop-blur rounded-3xl p-6 space-y-4">
-          <Toggle label=" Music" on={settings.music} onChange={v => setSettings(s => ({ ...s, music: v }))} />
-          <Toggle label=" Sound" on={settings.sound} onChange={v => setSettings(s => ({ ...s, sound: v }))} />
+      <div className={`fixed inset-0 ${bg} ${ui} flex flex-col items-center justify-center text-white p-6`}>
+        <h1 className="text-5xl font-[family-name:var(--font-logo)] mb-8 text-[#FFD93D] tracking-wide drop-shadow-[0_5px_0_rgba(0,0,0,0.6)]">SETTINGS</h1>
+        <div className="w-full max-w-md bg-black/50 backdrop-blur rounded-3xl p-6 space-y-4 border-2 border-[#FFD93D]/40">
+          <Toggle label="Music" on={settings.music} onChange={v => setSettings(s => ({ ...s, music: v }))} />
+          <Toggle label="Sound" on={settings.sound} onChange={v => setSettings(s => ({ ...s, sound: v }))} />
           <div>
-            <div className="font-bold mb-2"> Graphics</div>
+            <div className="font-bold mb-2">Graphics</div>
             <div className="flex gap-2">
               {(["high", "medium", "low"] as const).map(q => (
                 <button key={q} onClick={() => setSettings(s => ({ ...s, quality: q }))}
-                  className={`flex-1 py-2 rounded-xl font-bold capitalize ${settings.quality === q ? "bg-yellow-400 text-black" : "bg-white/10"}`}>{q}</button>
+                  className={`flex-1 py-2 rounded-xl font-bold capitalize ${settings.quality === q ? "bg-[#FFD93D] text-black" : "bg-white/10"}`}>{q}</button>
               ))}
             </div>
           </div>
-          <button onClick={() => document.documentElement.requestFullscreen?.()} className="w-full py-3 bg-white/10 rounded-xl font-bold"> Fullscreen</button>
-          <button onClick={() => { if (confirm("Reset high score?")) { localStorage.removeItem("fsf_best"); localStorage.removeItem("fsf_board"); setHud(h => ({ ...h, best: 0 })); } }} className="w-full py-3 bg-red-500/40 rounded-xl font-bold"> Reset High Score</button>
+          <button onClick={() => document.documentElement.requestFullscreen?.()} className="w-full py-3 bg-white/10 rounded-xl font-bold">Fullscreen</button>
+          <button onClick={() => { if (confirm("Reset high score?")) { localStorage.removeItem("fsf_best"); localStorage.removeItem("fsf_board"); setHud(h => ({ ...h, best: 0 })); } }} className="w-full py-3 bg-[#FF4D4D]/40 rounded-xl font-bold">Reset High Score</button>
         </div>
-        <button onClick={() => { sfx.click(); setScreen("menu"); }} className={`mt-8 ${btn} bg-white/20 backdrop-blur`}>← BACK</button>
+        <button onClick={() => { sfx.click(); setScreen("menu"); }} className={`mt-8 ${btn} bg-white/15 backdrop-blur`}>BACK</button>
       </div>
     );
   }
 
   if (screen === "gameover" && gameOverStats) {
     return (
-      <div className={`fixed inset-0 ${bg} flex flex-col items-center justify-center text-white p-6 overflow-auto`}>
-        <h1 className="text-6xl font-black mb-2 text-red-400 drop-shadow-[0_6px_0_rgba(0,0,0,0.5)] animate-pulse">GAME OVER</h1>
-        <div className="bg-black/40 backdrop-blur rounded-3xl p-8 mt-6 space-y-3 min-w-[300px] text-center">
+      <div className={`fixed inset-0 ${bg} ${ui} flex flex-col items-center justify-center text-white p-6 overflow-auto`}>
+        <h1 className="text-6xl font-[family-name:var(--font-combo)] mb-2 text-[#FF4D4D] drop-shadow-[0_6px_0_rgba(0,0,0,0.6)] animate-pulse tracking-wide">GAME OVER</h1>
+        <div className="bg-black/50 backdrop-blur rounded-3xl p-8 mt-6 space-y-3 min-w-[300px] text-center border-2 border-[#FFD93D]/40">
           <div><div className="text-white/60 text-sm">Final Score</div><div className="text-4xl font-black text-yellow-300">{gameOverStats.score}</div></div>
           <div><div className="text-white/60 text-sm">Highest Combo</div><div className="text-2xl font-bold">x{gameOverStats.combo}</div></div>
-          <div><div className="text-white/60 text-sm">Coins Collected</div><div className="text-2xl font-bold"> {gameOverStats.coins}</div></div>
-          <div><div className="text-white/60 text-sm">High Score</div><div className="text-2xl font-bold"> {hud.best}</div></div>
+          <div><div className="text-white/60 text-sm">Coins Collected</div><div className="text-2xl font-bold text-[#FFD93D]">{gameOverStats.coins}</div></div>
+          <div><div className="text-white/60 text-sm">High Score</div><div className="text-2xl font-bold">{hud.best}</div></div>
         </div>
         <div className="flex flex-wrap gap-3 mt-8 justify-center">
-          <button className={`${btn} bg-gradient-to-b from-green-400 to-green-600`} onClick={() => startGame(mode)}>▶ PLAY AGAIN</button>
-          <button className={`${btn} bg-gradient-to-b from-blue-400 to-blue-600`} onClick={() => { sfx.click(); setScreen("menu"); }}> HOME</button>
-          <button className={`${btn} bg-gradient-to-b from-purple-400 to-purple-600`} onClick={() => { sfx.click(); setScreen("leaderboard"); }}> SCORES</button>
-          <button className={`${btn} bg-gradient-to-b from-pink-400 to-pink-600`} onClick={async () => {
-            const text = `I scored ${gameOverStats.score} in Fruit Slash Frenzy! `;
+          <button className={`${btn} bg-gradient-to-b from-[#7CF08C] to-[#1F9E3B]`} onClick={() => startGame(mode)}>PLAY AGAIN</button>
+          <button className={`${btn} bg-gradient-to-b from-[#7DD3FC] to-[#0284C7]`} onClick={() => { sfx.click(); setScreen("menu"); }}>HOME</button>
+          <button className={`${btn} bg-gradient-to-b from-[#C4B5FD] to-[#7C3AED]`} onClick={() => { sfx.click(); setScreen("leaderboard"); }}>SCORES</button>
+          <button className={`${btn} bg-gradient-to-b from-[#FF9FBF] to-[#DB2777]`} onClick={async () => {
+            const text = `I scored ${gameOverStats.score} in Fruit Frenzy Blitz!`;
             if (navigator.share) { try { await navigator.share({ text }); } catch { /* ignore */ } }
             else { navigator.clipboard?.writeText(text); alert("Score copied to clipboard!"); }
-          }}> SHARE</button>
+          }}>SHARE</button>
         </div>
       </div>
     );
@@ -655,48 +667,48 @@ export default function FruitSlashFrenzy() {
   // GAME
   const s = stateRef.current;
   return (
-    <div className="fixed inset-0 overflow-hidden touch-none select-none">
+    <div className={`fixed inset-0 overflow-hidden touch-none select-none ${ui}`}>
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />
       {/* HUD */}
-      <div className="absolute top-0 left-0 right-0 p-3 flex items-start justify-between text-white font-black pointer-events-none">
-        <div className="bg-black/50 backdrop-blur px-4 py-2 rounded-xl">
+      <div className="absolute top-0 left-0 right-0 p-3 flex items-start justify-between text-white font-bold pointer-events-none">
+        <div className="bg-black/60 backdrop-blur px-4 py-2 rounded-xl border border-[#FFD93D]/40">
           <div className="text-xs text-white/60">SCORE</div>
-          <div className="text-2xl">{hud.score}</div>
+          <div className="text-2xl text-[#FFD93D] font-[family-name:var(--font-logo)] tracking-wide">{hud.score}</div>
         </div>
         <div className="flex flex-col items-center gap-2">
           {hud.combo > 1 && (
-            <div className="bg-yellow-400 text-black px-4 py-1 rounded-full text-lg animate-pulse">COMBO x{hud.combo}</div>
+            <div className="bg-[#FFD93D] text-black px-4 py-1 rounded-full text-lg animate-pulse font-[family-name:var(--font-combo)] tracking-wide border-2 border-white shadow-[0_4px_0_rgba(0,0,0,0.4)]">COMBO x{hud.combo}</div>
           )}
           {mode === "arcade" && (
-            <div className="bg-black/50 backdrop-blur px-4 py-2 rounded-xl text-2xl">⏱ {hud.time}s</div>
+            <div className="bg-black/60 backdrop-blur px-4 py-2 rounded-xl text-2xl border border-[#FFD93D]/40">{hud.time}s</div>
           )}
-          <div className="bg-black/50 backdrop-blur px-3 py-1 rounded-full text-sm"> {hud.coins}</div>
+          <div className="bg-black/60 backdrop-blur px-3 py-1 rounded-full text-sm text-[#FFD93D] border border-[#FFD93D]/40">{hud.coins} coins</div>
         </div>
         <div className="flex flex-col items-end gap-2">
-          <div className="bg-black/50 backdrop-blur px-4 py-2 rounded-xl flex gap-1">
+          <div className="bg-black/60 backdrop-blur px-4 py-2 rounded-xl flex gap-1 border border-[#FFD93D]/40">
             {Array.from({ length: 3 }).map((_, i) => (
-              <span key={i} className={i < hud.lives ? "text-red-400" : "text-white/20"}></span>
+              <span key={i} className={`w-3 h-3 rounded-full ${i < hud.lives ? "bg-[#FF4D4D] shadow-[0_0_8px_#FF4D4D]" : "bg-white/20"}`} />
             ))}
           </div>
-          <button className="bg-black/50 backdrop-blur w-10 h-10 rounded-full pointer-events-auto text-xl"
-            onClick={() => { s.running = false; setScreen("paused"); }}>⏸</button>
+          <button className="bg-[#FF8A00] w-10 h-10 rounded-full pointer-events-auto text-xl font-bold border-2 border-[#FFD93D] shadow-[0_4px_0_rgba(0,0,0,0.4)] active:translate-y-0.5"
+            onClick={() => { s.running = false; setScreen("paused"); }}>||</button>
         </div>
       </div>
       {/* buffs */}
       <div className="absolute bottom-3 left-3 flex gap-2 text-white text-xs font-bold">
-        {s.shield && <div className="bg-cyan-500/80 px-3 py-1 rounded-full"> SHIELD</div>}
-        {performance.now() < s.doubleUntil && <div className="bg-yellow-500/80 px-3 py-1 rounded-full">2x SCORE</div>}
-        {performance.now() < s.rainbowUntil && <div className="bg-pink-500/80 px-3 py-1 rounded-full"> RAINBOW</div>}
-        {performance.now() < s.freezeUntil && <div className="bg-blue-500/80 px-3 py-1 rounded-full"> FROZEN</div>}
+        {s.shield && <div className="bg-[#38BDF8]/85 px-3 py-1 rounded-full border border-white/40">SHIELD</div>}
+        {performance.now() < s.doubleUntil && <div className="bg-[#FFD93D]/90 text-black px-3 py-1 rounded-full border border-white/40">2x SCORE</div>}
+        {performance.now() < s.rainbowUntil && <div className="bg-[#DB2777]/85 px-3 py-1 rounded-full border border-white/40">RAINBOW</div>}
+        {performance.now() < s.freezeUntil && <div className="bg-[#0284C7]/85 px-3 py-1 rounded-full border border-white/40">FROZEN</div>}
       </div>
 
       {screen === "paused" && (
-        <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center text-white z-20">
-          <h2 className="text-5xl font-black mb-8">PAUSED</h2>
+        <div className="absolute inset-0 bg-black/75 flex flex-col items-center justify-center text-white z-20">
+          <h2 className="text-5xl font-[family-name:var(--font-logo)] tracking-wide mb-8 text-[#FFD93D] drop-shadow-[0_5px_0_rgba(0,0,0,0.6)]">PAUSED</h2>
           <div className="flex flex-col gap-3">
-            <button className={`${btn} bg-green-500`} onClick={() => { s.running = true; s.lastFrame = performance.now(); setScreen("game"); }}>▶ RESUME</button>
-            <button className={`${btn} bg-blue-500`} onClick={() => startGame(mode)}> RESTART</button>
-            <button className={`${btn} bg-red-500`} onClick={() => { sfx.click(); setScreen("menu"); }}> QUIT</button>
+            <button className={`${btn} bg-gradient-to-b from-[#7CF08C] to-[#1F9E3B]`} onClick={() => { s.running = true; s.lastFrame = performance.now(); setScreen("game"); }}>RESUME</button>
+            <button className={`${btn} bg-gradient-to-b from-[#FFE066] to-[#FF8A00]`} onClick={() => startGame(mode)}>RESTART</button>
+            <button className={`${btn} bg-gradient-to-b from-[#FF8A8A] to-[#B81E1E]`} onClick={() => { sfx.click(); setScreen("menu"); }}>QUIT</button>
           </div>
         </div>
       )}
@@ -708,7 +720,7 @@ function Toggle({ label, on, onChange }: { label: string; on: boolean; onChange:
   return (
     <div className="flex items-center justify-between">
       <span className="font-bold">{label}</span>
-      <button onClick={() => onChange(!on)} className={`w-14 h-8 rounded-full relative transition-colors ${on ? "bg-green-500" : "bg-white/20"}`}>
+      <button onClick={() => onChange(!on)} className={`w-14 h-8 rounded-full relative transition-colors ${on ? "bg-[#39D353]" : "bg-white/20"}`}>
         <span className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-all ${on ? "left-7" : "left-1"}`} />
       </button>
     </div>
@@ -716,19 +728,28 @@ function Toggle({ label, on, onChange }: { label: string; on: boolean; onChange:
 }
 
 function FloatingFruits() {
-  const items = ["", "", "", "", "", "", "", "", "", ""];
+  const items = [
+    { c: "#FF4D4D" }, { c: "#FF8A00" }, { c: "#FFD93D" }, { c: "#39D353" }, { c: "#38BDF8" },
+    { c: "#FF4D4D" }, { c: "#FF8A00" }, { c: "#FFD93D" }, { c: "#39D353" }, { c: "#38BDF8" },
+  ];
   return (
     <>
-      {items.map((f, i) => (
-        <div key={i}
-          className="absolute text-5xl md:text-6xl opacity-30 pointer-events-none"
-          style={{
-            left: `${(i * 13) % 100}%`,
-            top: `${(i * 27) % 100}%`,
-            animation: `float${i % 3} ${6 + (i % 4)}s ease-in-out infinite`,
-          }}
-        >{f}</div>
-      ))}
+      {items.map((f, i) => {
+        const size = 40 + ((i * 7) % 40);
+        return (
+          <div key={i}
+            className="absolute rounded-full pointer-events-none opacity-30 blur-[1px]"
+            style={{
+              width: size, height: size,
+              background: `radial-gradient(circle at 30% 30%, #ffffff88, ${f.c} 55%, ${f.c}dd)`,
+              boxShadow: `0 0 30px ${f.c}66`,
+              left: `${(i * 13) % 100}%`,
+              top: `${(i * 27) % 100}%`,
+              animation: `float${i % 3} ${6 + (i % 4)}s ease-in-out infinite`,
+            }}
+          />
+        );
+      })}
       <style>{`
         @keyframes float0 { 0%,100%{transform:translateY(0) rotate(0)} 50%{transform:translateY(-30px) rotate(180deg)} }
         @keyframes float1 { 0%,100%{transform:translateY(0) rotate(0)} 50%{transform:translateY(-50px) rotate(-180deg)} }
