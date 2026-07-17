@@ -8,6 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import faviconPng from "../../public/favicon.png?url";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -91,6 +92,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4f2e46d0-8855-4f28-a7fd-96fdc6fe5c18/id-preview-47c6c70f--341af7dc-8920-4021-aec9-26730869248c.lovable.app-1784196914508.png" },
     ],
     links: [
+      {
+        rel: "icon",
+        type: "image/png",
+        href: faviconPng,
+      },
       {
         rel: "stylesheet",
         href: appCss,
