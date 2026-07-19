@@ -450,7 +450,8 @@ export default function FruitSlashFrenzy() {
       for (const f of s.fruits) {
         if (f.sliced) continue;
         const dx = f.x - p.x, dy = f.y - p.y;
-        if (dx * dx + dy * dy < f.radius * f.radius) sliceFruit(f);
+        const hitR = f.radius * 1.35;
+        if (dx * dx + dy * dy < hitR * hitR) sliceFruit(f);
       }
       s.lastX = p.x; s.lastY = p.y;
     };
