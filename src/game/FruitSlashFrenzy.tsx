@@ -306,19 +306,19 @@ export default function FruitSlashFrenzy() {
       }
 
       // difficulty
-      s.difficulty = 1 + Math.floor(s.elapsed / 30000);
-      s.spawnInterval = Math.max(300, 900 - s.difficulty * 80);
+      s.difficulty = 1 + Math.floor(s.elapsed / 45000);
+      s.spawnInterval = Math.max(420, 1050 - s.difficulty * 70);
 
       // spawn
       s.spawnTimer += dt;
       if (!frozen && s.spawnTimer > s.spawnInterval) {
         s.spawnTimer = 0;
-        const n = 1 + Math.floor(Math.random() * (1 + s.difficulty / 2));
+        const n = 1 + Math.floor(Math.random() * (1 + s.difficulty / 3));
         for (let i = 0; i < n; i++) spawnFruit();
       }
 
       // update fruits
-      const grav = 0.5 * factor;
+      const grav = 0.35 * factor;
       for (const f of s.fruits) {
         f.vy += grav; f.x += f.vx * factor; f.y += f.vy * factor; f.rotation += f.vr * factor;
         if (f.life !== undefined) f.life -= dt * 0.06;
