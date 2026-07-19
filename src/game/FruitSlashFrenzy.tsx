@@ -136,14 +136,27 @@ export default function FruitSlashFrenzy() {
     const golden = !isBomb && !isPower && roll > 0.86;
     const rainbow = !isBomb && !isPower && !golden && roll > 0.82;
     const base = FRUITS[Math.floor(Math.random() * FRUITS.length)];
-    const x = 80 + Math.random() * (w - 160);
-    const targetX = x + (Math.random() - 0.5) * 260;
-    const vy = -(11 + Math.random() * 3 + s.difficulty * 0.4);
-    const vx = (targetX - x) / 70;
+    // Launch from a random point along the bottom edge
+    const x = 40 + Math.random() * (w - 80);
+    // Angle 60°–120° from horizontal (90° = straight up)
+    const angleDeg = 60 + Math.random() * 60;
+    const angle = (angleDeg * Math.PI) / 180;
+    // Target apex at 65–80% of screen height above the bottom
+    const peakFrac = 0.65 + Math.random() * 0.15;
+    const grav = 0.35;
+    // vy magnitude needed to reach that apex, +20% launch speed boost
+    const vyMag =
+      Math.sqrt(2 * grav * peakFrac * h) * 1.2 * (1 + s.difficulty * 0.03);
+    const sp = vyMag / Math.sin(angle);
+    // Bias horizontal direction inward so fruits from left tend to fly right and vice versa
+    let vx = sp * Math.cos(angle);
+    if ((x < w * 0.35 && vx < 0) || (x > w * 0.65 && vx > 0)) vx = -vx;
+    const vy = -vyMag;
     const f: Fruit = {
       x, y: h + 50, vx, vy,
       radius: Math.round(base.radius * 1.25),
-      rotation: 0, vr: (Math.random() - 0.5) * 0.12,
+      rotation: Math.random() * Math.PI * 2,
+      vr: (Math.random() - 0.5) * 0.28,
       type: base.type, color: base.color, color2: base.color2, sliced: false,
       golden, rainbow,
     };
@@ -309,12 +322,16 @@ export default function FruitSlashFrenzy() {
       s.difficulty = 1 + Math.floor(s.elapsed / 45000);
       s.spawnInterval = Math.max(420, 1050 - s.difficulty * 70);
 
-      // spawn
+      // spawn — varied waves of 2–5 fruits with slight timing differences
       s.spawnTimer += dt;
       if (!frozen && s.spawnTimer > s.spawnInterval) {
         s.spawnTimer = 0;
-        const n = 1 + Math.floor(Math.random() * (1 + s.difficulty / 3));
-        for (let i = 0; i < n; i++) spawnFruit();
+        const n = 2 + Math.floor(Math.random() * 4); // 2–5
+        for (let i = 0; i < n; i++) {
+          const delay = i === 0 ? 0 : 60 + Math.random() * 160;
+          if (delay === 0) spawnFruit();
+          else setTimeout(spawnFruit, delay);
+        }
       }
 
       // update fruits
