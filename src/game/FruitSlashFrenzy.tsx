@@ -137,25 +137,25 @@ export default function FruitSlashFrenzy() {
     const rainbow = !isBomb && !isPower && !golden && roll > 0.82;
     const base = FRUITS[Math.floor(Math.random() * FRUITS.length)];
     const x = 80 + Math.random() * (w - 160);
-    const targetX = x + (Math.random() - 0.5) * 300;
-    const vy = -(14 + Math.random() * 4 + s.difficulty * 0.6);
-    const vx = (targetX - x) / 60;
+    const targetX = x + (Math.random() - 0.5) * 260;
+    const vy = -(11 + Math.random() * 3 + s.difficulty * 0.4);
+    const vx = (targetX - x) / 70;
     const f: Fruit = {
-      x, y: h + 40, vx, vy,
-      radius: base.radius,
-      rotation: 0, vr: (Math.random() - 0.5) * 0.15,
+      x, y: h + 50, vx, vy,
+      radius: Math.round(base.radius * 1.25),
+      rotation: 0, vr: (Math.random() - 0.5) * 0.12,
       type: base.type, color: base.color, color2: base.color2, sliced: false,
       golden, rainbow,
     };
     if (isBomb) {
       const bt = Math.random(); f.isBomb = true;
       f.bombType = bt < 0.15 ? "ice" : bt < 0.25 ? "golden" : "classic";
-      f.radius = 40; f.color = f.bombType === "ice" ? "#4fc3f7" : f.bombType === "golden" ? "#ffca28" : "#222";
+      f.radius = 50; f.color = f.bombType === "ice" ? "#4fc3f7" : f.bombType === "golden" ? "#ffca28" : "#222";
     }
     if (isPower) {
       f.isPowerup = true;
       f.powerType = POWERUPS[Math.floor(Math.random() * POWERUPS.length)];
-      f.color = "#00e5ff"; f.radius = 38;
+      f.color = "#00e5ff"; f.radius = 48;
     }
     s.fruits.push(f);
   }, []);
@@ -306,19 +306,19 @@ export default function FruitSlashFrenzy() {
       }
 
       // difficulty
-      s.difficulty = 1 + Math.floor(s.elapsed / 30000);
-      s.spawnInterval = Math.max(300, 900 - s.difficulty * 80);
+      s.difficulty = 1 + Math.floor(s.elapsed / 45000);
+      s.spawnInterval = Math.max(420, 1050 - s.difficulty * 70);
 
       // spawn
       s.spawnTimer += dt;
       if (!frozen && s.spawnTimer > s.spawnInterval) {
         s.spawnTimer = 0;
-        const n = 1 + Math.floor(Math.random() * (1 + s.difficulty / 2));
+        const n = 1 + Math.floor(Math.random() * (1 + s.difficulty / 3));
         for (let i = 0; i < n; i++) spawnFruit();
       }
 
       // update fruits
-      const grav = 0.5 * factor;
+      const grav = 0.35 * factor;
       for (const f of s.fruits) {
         f.vy += grav; f.x += f.vx * factor; f.y += f.vy * factor; f.rotation += f.vr * factor;
         if (f.life !== undefined) f.life -= dt * 0.06;
@@ -450,7 +450,8 @@ export default function FruitSlashFrenzy() {
       for (const f of s.fruits) {
         if (f.sliced) continue;
         const dx = f.x - p.x, dy = f.y - p.y;
-        if (dx * dx + dy * dy < f.radius * f.radius) sliceFruit(f);
+        const hitR = f.radius * 1.35;
+        if (dx * dx + dy * dy < hitR * hitR) sliceFruit(f);
       }
       s.lastX = p.x; s.lastY = p.y;
     };
