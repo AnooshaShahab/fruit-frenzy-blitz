@@ -138,20 +138,21 @@ export default function FruitSlashFrenzy() {
     const base = FRUITS[Math.floor(Math.random() * FRUITS.length)];
     // Launch from a random point along the bottom edge
     const x = 40 + Math.random() * (w - 80);
-    // Angle 60°–120° from horizontal (90° = straight up)
-    const angleDeg = 60 + Math.random() * 60;
+    // Angle 70°–110° from horizontal (90° = straight up) for controlled, readable arcs
+    const angleDeg = 70 + Math.random() * 40;
     const angle = (angleDeg * Math.PI) / 180;
-    // Target apex at 65–80% of screen height above the bottom
-    const peakFrac = 0.65 + Math.random() * 0.15;
-    const grav = 0.35;
-    // vy magnitude needed to reach that apex, +20% launch speed boost
-    const vyMag =
-      Math.sqrt(2 * grav * peakFrac * h) * 1.2 * (1 + s.difficulty * 0.03);
+    // Target apex at 70–80% of screen height above the bottom
+    const peakFrac = 0.70 + Math.random() * 0.10;
+    const grav = 0.42;
+    // vy magnitude needed to reach the target apex
+    const vyMag = Math.sqrt(2 * grav * peakFrac * h) * (1 + s.difficulty * 0.03);
     const sp = vyMag / Math.sin(angle);
+    // Keep horizontal travel small so fruits stay near the center of the screen
+    let vx = sp * Math.cos(angle) * 0.5;
     // Bias horizontal direction inward so fruits from left tend to fly right and vice versa
-    let vx = sp * Math.cos(angle);
     if ((x < w * 0.35 && vx < 0) || (x > w * 0.65 && vx > 0)) vx = -vx;
     const vy = -vyMag;
+
     const f: Fruit = {
       x, y: h + 50, vx, vy,
       radius: Math.round(base.radius * 1.25),
