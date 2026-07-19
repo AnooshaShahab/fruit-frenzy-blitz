@@ -336,7 +336,7 @@ export default function FruitSlashFrenzy() {
       }
 
       // update fruits
-      const grav = 0.35 * factor;
+      const grav = 0.42 * factor;
       for (const f of s.fruits) {
         f.vy += grav; f.x += f.vx * factor; f.y += f.vy * factor; f.rotation += f.vr * factor;
         if (f.life !== undefined) f.life -= dt * 0.06;
